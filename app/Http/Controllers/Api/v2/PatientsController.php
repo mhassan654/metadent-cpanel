@@ -365,7 +365,7 @@ class PatientsController extends Controller
                     "guardian_email" => request()->guardianEmail == "" ? null : request()->guardianEmail,
                     "guardian_address" => request()->guardianAddress == "" ? null : request()->guardianAddress,
                     "reviews" => request()->reviews == "" ? null : request()->reviews,
-                    "facility_id" => Auth::user()->facility_id,
+                    "facility_id" => 1,
                     "citizen_service_number" => request()->citizenServiceNumber == "" ? null : request()->citizenServiceNumber,
                     "nok_phone_number" => request()->nokPhoneNumber == "" ? null : request()->nokPhoneNumber,
                     "nok_name" => request()->nokName == "" ? null : request()->nokName,
@@ -818,7 +818,7 @@ class PatientsController extends Controller
             $patientId = request()->patientId;
             $patientExists = Patient::find($patientId);
 
-            $all_appointments = Appointment::where('patient_id', $patientExists->id)->where("facility_id", Auth::user()->facility_id)
+            $all_appointments = Appointment::where('patient_id', $patientExists->id)
                 ->with(["patient", "status", "source", "type", "treatment", "period"])
                 ->orderBy("date", "asc")
                 ->get();
@@ -1086,7 +1086,7 @@ class PatientsController extends Controller
     public function patient_number()
     {
         try {
-            $all_patients = Patient::where('facility_id', Auth::user()->facility_id)->count();
+            $all_patients = Patient::where('facility_id', 1)->count();
             return $this->customSuccessResponseWithPayload($all_patients);
         } catch (\Throwable $th) {
             return $this->customFailResponseWithPayload($th->getMessage());
