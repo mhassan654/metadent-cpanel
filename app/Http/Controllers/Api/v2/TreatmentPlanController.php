@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Common\Helper;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\TreatmentPlan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiBaseController;
 use App\Http\Resources\TreatmentPlanResource;
 
-class TreatmentPlanController extends BaseController
+class TreatmentPlanController extends Controller
 {
     /**
      * Display a listing of the resource.

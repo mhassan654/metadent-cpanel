@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\CompositeType;
 use App\Models\TreatmentFrame;
 use Illuminate\Http\JsonResponse;
@@ -10,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class TreatmentsFrameController extends BaseController
+class TreatmentsFrameController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +20,7 @@ class TreatmentsFrameController extends BaseController
      */
     public function index()
     {
-        return $this->customSuccessResponseWithPayload(TreatmentFrame::where('facility_id', Auth::user()->facility_id)->get());
+        return $this->customSuccessResponseWithPayload(TreatmentFrame::all());
     }
 
 
@@ -47,7 +48,7 @@ class TreatmentsFrameController extends BaseController
         }
         try {
             $new_frame = new TreatmentFrame;
-            $new_frame->facility_id = Auth::user()->facility_id;
+            $new_frame->facility_id = 1;
             $new_frame->frame_name = $request->frameName;
             $new_frame->frame_code= $request->frameCode;
             $new_frame->save();
@@ -89,7 +90,7 @@ class TreatmentsFrameController extends BaseController
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -134,7 +135,7 @@ class TreatmentsFrameController extends BaseController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function destroy($id)
     {

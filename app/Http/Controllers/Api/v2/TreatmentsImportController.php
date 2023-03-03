@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Exports\TreatmentsExport;
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Imports\TreatmentsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
-class TreatmentsImportController extends BaseController
+class TreatmentsImportController extends Controller
 {
     public function __construct()
     {

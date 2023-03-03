@@ -3,12 +3,13 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ToggleSettings;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Validator;
 
-class ToggleController extends BaseController {
+class ToggleController extends Controller {
 
     public function __construct()
     {

@@ -186,10 +186,10 @@ class TransactionsController extends Controller
     public function handleWebhookNotification(Request $request)
     {
         $payment = Mollie::api()->payments->get($request->id);
-
+        $update_transaction = InvoiceTransaction::where('transaction_id', $payment->id)->first();
         if ($payment->status == 'paid') {
 
-            $update_transaction = InvoiceTransaction::where('transaction_id', $payment->id)->first();
+
 
             $update_transaction->paid_at = $payment->paidAt;
             $update_transaction->tr_cardNumber = $payment->details->cardNumber;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TreatmentCategory;
 use App\Http\Controllers\ApiBaseController;
@@ -9,7 +10,7 @@ use App\Http\Resources\TreatmentCategoryResource;
 use App\Models\TreatmentSubCategory;
 use Illuminate\Support\Facades\Auth;
 
-class TreatmentCategoriesController extends BaseController
+class TreatmentCategoriesController extends Controller
 {
     public function __construct()
     {
@@ -60,7 +61,7 @@ class TreatmentCategoriesController extends BaseController
         $newTreatmentCategory = TreatmentCategory::create([
             "name" => $request->name,
             "parent_id" => $request->parent_id ? $request->parent_id : 0,
-            "facility_id" => Auth::user()->facility_id,
+            "facility_id" => 1,
         ]);
 
         if($newTreatmentCategory)

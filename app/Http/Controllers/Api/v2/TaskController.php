@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Tasks\TaskListService;
 use App\Services\Tasks\TaskStoreService;
-use App\Http\Controllers\ApiBaseController;
 use App\Services\Tasks\TaskUpdateService;
 use Illuminate\Support\Facades\Validator;
 
-class TaskController extends BaseController
+class TaskController extends Controller
 {
     public function __construct()
     {

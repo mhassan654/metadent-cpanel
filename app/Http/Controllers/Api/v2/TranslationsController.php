@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTranslationRequest;
 use App\Models\Translation;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
 
-class TranslationsController extends BaseController
+class TranslationsController extends Controller
 {
     public function construct()
     {

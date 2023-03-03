@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SystemCode;
 use App\Modules\Common\Helper;
 
-class SystemCodesController extends BaseController
+class SystemCodesController extends Controller
 {
     /**
      * Display a listing of the resource.
