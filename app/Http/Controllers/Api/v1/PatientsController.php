@@ -12,13 +12,16 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
+use App\Models\Employee;
 use App\Models\HealthHistory;
 use App\Models\Patient;
 use App\Models\User;
 //use http\Env\Request;
+use App\Modules\Core\LogActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 use Response;
@@ -33,18 +36,14 @@ class PatientsController extends Controller
 
     public function index()
     {
-        if ($this->authUser()->can('View Patients')) {
             $patients = $this->allPatients();
             return $this->customSuccessResponseWithPayload($patients);
-        }
-        return $this->customFailResponseWithPayload('Permission denied');
     }
 
     //TIED TO v1/patients/patient ROUTE IN THE api.php FILE IN THE ROUTES FOLDER
     public function show(Request $request)
     {
-//        if ($this->authUser()->can('View Patients')) {
-            // Check if all the mandatory fields have been provided
+
             $validator = Validator::make($request->all(), [
                 "patientId" => "required",
             ]);
@@ -59,7 +58,7 @@ class PatientsController extends Controller
 
             // if the patient exists
             if ($patient) {
-                $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", $patient->id)->first();
+                $history = HealthHistory::where("patient_id", $patient->id)->first();
 
                 $patient->healthHistory = $history ? $history->history : "";
 
@@ -69,15 +68,11 @@ class PatientsController extends Controller
 
             // If the patient record does not exist then notify the client
             return $this->customFailResponseWithPayload("Patient not found in the system");
-//        }
-//        return $this->customFailResponseWithPayload('Permission denied');
     }
 
 // //TIED TO v1/patients/create ROUTE IN THE api.php FILE IN THE ROUTES FOLDER
     public function store(Request $request)
     {
-//        if ($this->authUser()->can('Create Patient')) {
-
             $validator = Validator::make($request->all(), [
                 "firstName" => "required",
                 "lastName" => "required",
@@ -175,11 +170,11 @@ class PatientsController extends Controller
             if ($patient) {
                 // is_null, empty, is_string
                 if (request()->healthHistory != null && request()->healthHistory != "" && request()->healthHistory !== " ") {
-                    $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", request()->patientId)->first();
+                    $history = HealthHistory::where("patient_id", request()->patientId)->first();
 
                     HealthHistory::create([
                         "patient_id" => $patient->id,
-                        "facility_id" => Auth::user()->facility_id,
+                        "facility_id" => 1,
                         "history" => request()->healthHistory,
                     ]);
                 }
@@ -229,7 +224,7 @@ class PatientsController extends Controller
                     "guardian_email" => request()->guardianEmail,
                     "guardian_address" => request()->guardianAddress,
                     "reviews" => request()->reviews,
-                    "facility_id" => Auth::user()->facility_id,
+                    "facility_id" => 1,
                     "citizen_service_number" => request()->citizenServiceNumber,
                     "nok_phone_number" => request()->nokPhoneNumber,
                     "nok_name" => request()->nokName,
@@ -247,7 +242,7 @@ class PatientsController extends Controller
 
                 // // Check if the update is successful then proceed
                 if ($updated) {
-                    $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", $patient->id)->first();
+                    $history = HealthHistory::where("patient_id", $patient->id)->first();
 
                     if ($history) {
                         $history->update(["history" => request()->healthHistory]);
@@ -255,7 +250,7 @@ class PatientsController extends Controller
                         if (request()->healthHistory != null && request()->healthHistory != "" && request()->healthHistory != " ") {
                             HealthHistory::create([
                                 "patient_id" => request()->$patient->id,
-                                "facility_id" => Auth::user()->facility_id,
+                                "facility_id" => 1,
                                 "history" => request()->healthHistory,
                             ]);
                         }
@@ -276,13 +271,12 @@ class PatientsController extends Controller
 
     private function allPatients()
     {
-        $patients = Patient::with('mainDoctor')->where("facility_id", Auth::user()->facility_id)
-            ->orderBy("created_at", "desc")->get();
+        $patients = Patient::with('mainDoctor')->orderBy("created_at", "desc")->get();
 
         $finalPatients = [];
 
         foreach ($patients as $patient) {
-            $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", $patient->id)->first();
+            $history = HealthHistory::where("patient_id", $patient->id)->first();
             $patient->healthHistory = $history ? $history->history : "";
 
             $finalPatients[] = $patient;
@@ -293,10 +287,7 @@ class PatientsController extends Controller
 
     public function paginated()
     {
-        if ($this->authUser()->can('View Patients')  || $this->authUser()->hasRole('Doctor')) {
-            return $this->customSuccessResponseWithPayload(Patient::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->paginate(20));
-        }
-        return $this->customFailResponseWithPayload('Permission denied');
+            return $this->customSuccessResponseWithPayload(Patient::orderBy("created_at", "desc")->paginate(20));
     }
 
     public function assignDoctor()
@@ -324,7 +315,7 @@ class PatientsController extends Controller
 
                     $getDoctors = [];
                     foreach ($secondaryDoctorsArr as $second) {
-                        array_push($getDoctors, User::role('Doctor')->where('id', $second)->first());
+                        array_push($getDoctors, Employee::role('Doctor')->where('id', $second)->first());
                     }
 
                     $doctorsArr['sec_doctors'] = $getDoctors;
@@ -344,7 +335,7 @@ class PatientsController extends Controller
             $patientId = request()->patientId;
             $patientExists = Patient::find($patientId);
 
-            $all_appointments = Appointment::where('patient_id', $patientExists->id)->where("facility_id", Auth::user()->facility_id)
+            $all_appointments = Appointment::where('patient_id', $patientExists->id)
                 ->with(["patient", "status", "source", "type", "treatment", "period"])
                 ->orderBy("date", "asc")
                 ->get();
@@ -359,7 +350,7 @@ class PatientsController extends Controller
                 $doctors_list = [];
 
                 foreach ($doctor_ids as $doctor_id):
-                    $doctors_list[] = User::find($doctor_id);
+                    $doctors_list[] = Employee::find($doctor_id);
                 endforeach;
 
                 $appointment->doctors = $doctors_list;
@@ -386,7 +377,7 @@ class PatientsController extends Controller
 
             $getDoctors = [];
             foreach ($secondaryDoctorsArr as $second) {
-                array_push($getDoctors, User::where('id', $second)->first());
+                array_push($getDoctors, Employee::where('id', $second)->first());
             }
 
             $doctorsArr['sec_doctors'] = $getDoctors;

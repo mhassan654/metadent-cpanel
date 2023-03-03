@@ -20,6 +20,7 @@
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "^3.1",
         "mailchimp/marketing": "^3.0",
+        "intervention/image": "^2.7",
         "matthewbdaly/laravel-azure-storage": "^2.0",
         "meyfa/php-svg": "^0.14.2",
         "milon/barcode": "^10.0",

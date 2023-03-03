@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class SlotsController extends BaseController
+class SlotsController extends ApiBaseController
 {
 
     public function __construct()

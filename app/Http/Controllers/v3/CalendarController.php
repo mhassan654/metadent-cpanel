@@ -37,7 +37,7 @@ class CalendarController extends Controller
     {
 
         try {
-            $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->latest()
+            $all_appointments = Appointment::latest()
                 // ->where('status_id', '!=', APPOINTMENT_PENDING)
                 ->with([
                     'patient', 'department',
@@ -53,7 +53,7 @@ class CalendarController extends Controller
 
     public function frontOfficeAppointments(){
         try {
-            $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->latest()
+            $all_appointments = Appointment::latest()
                 // ->where('status_id', '!=', APPOINTMENT_PENDING)
                 ->where('date',  Carbon::today()->format('d-m-Y'))
                 ->with([
@@ -72,8 +72,7 @@ class CalendarController extends Controller
     {
 
         try {
-            $all_events = Event::where('facility_id', Auth::user()->facility_id)
-                ->with('frequency')->get();
+            $all_events = Event::with('frequency')->get();
             $all_events = EventResource::collection($all_events);
             return $this->customSuccessResponseWithPayload($all_events);
         } catch (\Throwable $th) {
@@ -110,9 +109,9 @@ class CalendarController extends Controller
             // });
 
             $all_doctors = Employee::with(['employeeType', 'department'])
-                ->where('facility_id', Auth::user()->facility_id)
                 ->whereIn('id', $all_doctor_ids)
-                ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id', 'frequency_id', 'contract_start_date', 'contract_end_date', 'availability', 'interval'])
+                ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id',
+                    'frequency_id', 'contract_start_date', 'contract_end_date', 'availability', 'interval'])
                 ->makeHidden(['roles', 'permissions']);
 
             return $this->customSuccessResponseWithPayload($all_doctors);
@@ -124,11 +123,11 @@ class CalendarController extends Controller
     public function assistants()
     {
         $all_assistants = Employee::with(['department', 'employeeType'])
-            ->where('facility_id', Auth::user()->facility_id)
             ->whereHas('employeeType', function ($query) {
                 $query->where('type', 'LIKE', '%' . 'Assistant' . '%');
             })
-            ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id', 'frequency_id', 'contract_start_date', 'contract_end_date', 'availability', 'interval'])
+            ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id', 'frequency_id',
+                'contract_start_date', 'contract_end_date', 'availability', 'interval'])
             ->makeHidden(['roles', 'permissions']);
 
         return $all_assistants;
@@ -153,7 +152,6 @@ class CalendarController extends Controller
             $doctor_ids = $this->doctor_ids();
             $assistant_doctor_ids = array_unique(array_merge($assistant_ids, $doctor_ids), SORT_REGULAR);
             $all_front_office_users = Employee::with(['department', 'employeeType'])
-                ->where('facility_id', Auth::user()->facility_id)
                 ->whereNotIn('id', $assistant_doctor_ids)
                 ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id', 'frequency_id', 'contract_start_date', 'contract_end_date', 'availability', 'interval'])
                 ->makeHidden(['roles', 'permissions']);
@@ -169,8 +167,7 @@ class CalendarController extends Controller
                 $assistant_ids = $this->assistants()->pluck('id')->toArray();
                 $doctor_ids = $this->doctor_ids();
                 $assistant_doctor_ids = array_unique(array_merge($assistant_ids, $doctor_ids), SORT_REGULAR);
-                $doctor_assistants = Employee::where('facility_id', Auth::user()->facility_id)
-                    ->whereIn('id', $assistant_doctor_ids)
+                $doctor_assistants = Employee::whereIn('id', $assistant_doctor_ids)
                     ->get(['id', 'first_name', 'last_name'])
                     ->makeHidden(['roles', 'permissions']);
                 return $this->customSuccessResponseWithPayload($doctor_assistants);

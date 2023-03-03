@@ -11,7 +11,7 @@ namespace App\Services\SlotsService;
 use App\Models\Appointment;
 use App\Models\AppointmentType;
 use App\Models\TreatmentType;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;

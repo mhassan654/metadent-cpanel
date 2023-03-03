@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\DoneTreatment;
 use App\Models\Invoice;
@@ -25,10 +26,10 @@ class ReportController extends ApiBaseController
     {
         $response = [
             'treatments' => count(Treatment::all()),
-            'employees' => count(Employee::where('facility_id', auth()->user()->facility_id)->get()),
-            'patients' => count(Patient::where('facility_id', auth()->user()->facility_id)->get()),
-            'invoices' => count(Invoice::where('facility_id', auth()->user()->facility_id)->get()),
-            'appointments' => count(Appointment::where('facility_id', auth()->user()->facility_id)->get())
+            'employees' => count(Employee::all()),
+            'patients' => count(Patient::all()),
+            'invoices' => count(Invoice::all()),
+            'appointments' => count(Appointment::all())
         ];
         return $this->customSuccessResponseWithPayload($response);
     }
@@ -476,8 +477,8 @@ class ReportController extends ApiBaseController
         try {
             $patients = Patient::pluck('created_at')->all();
             $dates = [];
-            foreach ($patients as $patients) {
-                $dates[] = $patients->format('d-m-Y');
+            foreach ($patients as $patient) {
+                $dates[] = $patient->format('d-m-Y');
             }
             $appex_data = $this->format_appex_chart_data($dates);
             return $this->customSuccessResponseWithPayload($appex_data);

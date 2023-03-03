@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\OtherSpecifiedTreatment;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Throwable;
 
 class OtherSpecifiedTreatmentsController extends Controller
 {
