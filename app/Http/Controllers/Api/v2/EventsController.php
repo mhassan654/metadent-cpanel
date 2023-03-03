@@ -9,24 +9,21 @@
  */
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Event;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use App\Services\EventService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class EventsController extends BaseController
+class EventsController extends Controller
 {
-    public function __construct()
-    {
-//        $this->middleware(["auth:api"]);
-    }
 
     public function index()
     {
-        $events = Event::where('facility_id', Auth::user()->facility_id)->get();
+        $events = Event::all();
         $final_event_container = [];
 
         foreach ($events as $event):
@@ -239,7 +236,7 @@ class EventsController extends BaseController
 
         if ($event) {
             $event->update([
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" =>1,
                 "frequency_id" => request()->frequencyId,
                 "user_id" => request()->userId,
                 "title" => request()->title,
