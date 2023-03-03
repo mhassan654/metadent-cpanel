@@ -3,20 +3,17 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Appointment;
-use App\Models\DoctorTimeSlot;
 use App\Models\Slot;
 use App\Models\User;
-use App\Models\Week1_slots;
-use App\Models\Week2_slots;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class SlotsController extends BaseController
+class SlotsController extends Controller
 {
 
     public function __construct()
