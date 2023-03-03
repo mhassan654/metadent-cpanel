@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OtherSpecifiedTreatment;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class OtherSpecifiedTreatmentsController extends Controller
 {
@@ -16,7 +17,7 @@ class OtherSpecifiedTreatmentsController extends Controller
      */
     public function index()
     {
-        return $this->customSuccessResponseWithPayload(OtherSpecifiedTreatment::where('facility_id', Auth::user()->facility_id)->get());
+        return $this->customSuccessResponseWithPayload(OtherSpecifiedTreatment::all());
     }
 
 
@@ -45,7 +46,7 @@ class OtherSpecifiedTreatmentsController extends Controller
         }
         try {
             $new_frame = new OtherSpecifiedTreatment;
-            $new_frame->facility_id = Auth::user()->facility_id;
+            $new_frame->facility_id = 1;
             $new_frame->name = $request->name;
             $new_frame->code= $request->code;
             $new_frame->treatments= $request->treatments;

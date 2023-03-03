@@ -11,6 +11,6 @@ class PeriodsController extends Controller
     public function index()
     {
 
-        return $this->customSuccessResponseWithPayload(Period::where('facility_id', Auth::user()->facility_id)->get());
+        return $this->customSuccessResponseWithPayload(Period::all());
     }
 }
