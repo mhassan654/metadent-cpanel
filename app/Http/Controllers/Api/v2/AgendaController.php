@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Agenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class AgendaController extends ApiBaseController
+class AgendaController extends Controller
 {
 
     /**

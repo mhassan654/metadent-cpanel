@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Models\MedicalHistory;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\ApiBaseController;
 
-class MedicalHistoryController extends BaseController
+class MedicalHistoryController extends ApiBaseController
 {
     public function __construct()
     {

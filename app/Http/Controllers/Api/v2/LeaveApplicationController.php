@@ -18,7 +18,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\LeaveListExport;
 
-class LeaveApplicationController extends BaseController
+class LeaveApplicationController extends ApiBaseController
 {
     public function __construct()
     {

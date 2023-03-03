@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v2;
 use App\Exports\DoctorTreatmentsExport;
 use App\Exports\EmployeeExport;
 use App\Exports\EmployeeLogExport;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Modules\Core\LogActivity;
 use App\Models\Employee;
@@ -655,7 +656,7 @@ class EmployeeController extends ApiBaseController
     {
         try {
             $query_employees = Employee::with(['department', 'city', 'position', 'reportingTo', 'country', 'latestLog']);
-
+            
             $query_employees->when(request("departments"), function ($query) {
                 $departments = request("departments");
                 return $query->whereIn('department_id', $departments);
@@ -734,7 +735,6 @@ class EmployeeController extends ApiBaseController
                     }
                 );
             });
-
             $paginated_employees = $query_employees->latest()->paginate(20);
             LogActivity::addToLog('Read Employee List', 'Read');
             return $this->customSuccessResponseWithPayload($paginated_employees);

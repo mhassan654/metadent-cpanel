@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Common\Helper;
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
 use App\Models\Audience;
 use App\Services\Markerting\Markerting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AudiencesController extends BaseController
+class AudiencesController extends Controller
 {
     // //check auth middleware
     // public function __construct()

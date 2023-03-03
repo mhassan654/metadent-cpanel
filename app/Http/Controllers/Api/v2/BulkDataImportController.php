@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Imports\PatientsImport;
-use App\Http\Controllers\ApiBaseController;
 use Maatwebsite\Excel\Facades\Excel;
 
-class BulkDataImportController extends BaseController
+class BulkDataImportController extends Controller
 {
     public function import_patients(Request $request)
     {

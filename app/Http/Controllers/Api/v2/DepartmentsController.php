@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentsController extends BaseController
+class DepartmentsController extends Controller
 {
     public function __construct()
     {
@@ -49,7 +50,7 @@ class DepartmentsController extends BaseController
             if (auth()->check()) {
                 $newDepartment = new Department();
                 $newDepartment->department = request()->department;
-                $newDepartment->facility_id = Auth::user()->facility_id;
+                $newDepartment->facility_id = 1;
                 $newDepartment->save();
 
                 if ($newDepartment):
@@ -199,7 +200,7 @@ class DepartmentsController extends BaseController
     private function alldepartments()
     {
         return $this->customSuccessResponseWithPayload(
-            Department::with('sub_department')->where('facility_id', Auth::user()->facility_id)->where('parent_id', 0)->orderBy("id", "desc")->get()
+            Department::with('sub_department')->where('parent_id', 0)->orderBy("id", "desc")->get()
         );
     }
 
@@ -207,8 +208,7 @@ class DepartmentsController extends BaseController
     {
         try {
             return $this->customSuccessResponseWithPayload(
-                Department::where('facility_id', Auth::user()->facility_id)
-                ->where('department','Front Office')
+                Department::where('department','Front Office')
                 ->orWhere('department','Dentists')
                 ->orderBy("id", "desc")
                 ->get()

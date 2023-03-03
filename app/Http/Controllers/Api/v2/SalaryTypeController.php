@@ -10,7 +10,7 @@ use App\Services\SalaryType\SalaryTypeListService;
 use App\Services\SalaryType\SalaryTypeStoreService;
 use App\Services\SalaryType\SalaryTypeUpdateService;
 
-class SalaryTypeController extends BaseController
+class SalaryTypeController extends ApiBaseController
 {
     /**
      * Display a listing of the resource.

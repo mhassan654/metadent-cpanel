@@ -7,7 +7,7 @@ use App\Http\Controllers\ApiBaseController;
 use App\Http\Requests\StoreLanguageRequest;
 use App\Http\Requests\UpdateLanguageRequest;
 
-class LanguageController extends BaseController
+class LanguageController extends ApiBaseController
 {
     /**
      * Display a listing of the resource.

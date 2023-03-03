@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
 
-class DatabaseBackupController extends BaseController
+class DatabaseBackupController extends Controller
 {
     public function getBackupFiles()
     {

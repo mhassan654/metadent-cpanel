@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\DutyType;
 use App\Http\Controllers\ApiBaseController;
 use App\Http\Requests\StoreDutyTypeRequest;
 use App\Http\Requests\UpdateDutyTypeRequest;
 
-class DutyTypeController extends BaseController
+class DutyTypeController extends Controller
 {
     /**
      * Display a listing of the resource.

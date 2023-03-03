@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Api\v2;
 
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\AppointmentReason;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AppointmentReasonController extends BaseController
+class AppointmentReasonController extends Controller
 {
     public function __construct()
     {
@@ -40,7 +39,7 @@ class AppointmentReasonController extends BaseController
 
         $newReason = AppointmentReason::create([
             "reason" => request()->reason,
-            "facility_id" => Auth::user()->facility_id,
+            "facility_id" => 1,
         ]);
 
         if($newReason)
@@ -86,6 +85,6 @@ class AppointmentReasonController extends BaseController
 
     private function allReasons()
     {
-        return $this->customSuccessResponseWithPayload(AppointmentReason::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get());
+        return $this->customSuccessResponseWithPayload(AppointmentReason::orderBy("created_at", "desc")->get());
     }
 }

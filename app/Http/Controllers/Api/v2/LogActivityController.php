@@ -7,12 +7,13 @@ use App\Exports\UserLogActivityExport;
 use App\Models\LogActivity;
 use App\Models\Patient;
 use App\Modules\Common\Helper;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\ApiBaseController;
 
-class LogActivityController extends BaseController
+class LogActivityController extends ApiBaseController
 {
 
     public function __construct()

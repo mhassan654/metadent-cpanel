@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAttendanceTimeRequest;
 use App\Http\Requests\UpdateAttendanceTimeRequest;
 use App\Models\AttendanceTime;
@@ -11,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class AttendanceTimeController extends BaseController
+class AttendanceTimeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -46,7 +45,7 @@ class AttendanceTimeController extends BaseController
         $newDepartment->name = request()->name;
         $newDepartment->start_time = request()->startTime;
         $newDepartment->end_time = request()->endTime;
-        $newDepartment->facility_id = Auth::user()->facility_id;
+        $newDepartment->facility_id = 1;
         $newDepartment->save();
 
         if ($newDepartment) {

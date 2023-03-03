@@ -1,54 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\Api\v3;
+namespace App\Http\Controllers\v3;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\AppointmentResource;
-use App\Http\Resources\EventResource;
-use App\Models\Appointment;
-use App\Models\Event;
-use Metadent\AuthModule\Models\Employee;
-use App\Traits\FrontOfficeTrait;
+use stdClass;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Event;
+use App\Models\Employee;
+use App\Models\Facility;
+use App\Models\Appointment;
+use App\Traits\FrontOfficeTrait;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\EventResource;
+use App\Http\Resources\AppointmentResource;
 
-class CalendarController extends ApiBaseController
+class CalendarController extends Controller
 {
     use FrontOfficeTrait;
 
     public function __construct()
     {
-        //        $this->middleware(["auth:api"]);
+//        $this->middleware(["auth:api"]);
     }
     private $appointment_columns_filter = [
-        'appointments.id',
-        'appointments.date',
-        'appointments.slots',
-        'appointments.doctors',
-        'appointments.comments',
-        'appointments.appointment_type_id',
-        'patients.id as patient_id',
-        'patients.gender',
-        'patients.first_name',
-        'patients.last_name',
-        'patients.birth_date',
-        'patients.country',
-        'patients.city',
-        'treatment_types.id as treatment_type_id',
-        'treatment_types.title',
-        'treatment_types.color',
-        'appointment_sources.id as source_id',
-        'appointment_sources.source',
-        'appointment_statuses.id as status_id',
-        'appointment_statuses.status',
-        'frequencies.id as frequency_id',
-        'frequencies.label as frequency_label',
-        'appointment_types.id as appointment_type_id',
-        'appointment_types.title as appointment_type_title',
-        'appointment_types.code as appointment_type_code',
-        'appointment_types.color as appointment_type_color',
+        'appointments.id', 'appointments.date', 'appointments.slots', 'appointments.doctors', 'appointments.comments', 'appointments.appointment_type_id',
+        'patients.id as patient_id', 'patients.gender', 'patients.first_name', 'patients.last_name', 'patients.birth_date', 'patients.country', 'patients.city',
+        'treatment_types.id as treatment_type_id', 'treatment_types.title', 'treatment_types.color',
+        'appointment_sources.id as source_id', 'appointment_sources.source',
+        'appointment_statuses.id as status_id', 'appointment_statuses.status',
+        'frequencies.id as frequency_id', 'frequencies.label as frequency_label',
+        'appointment_types.id as appointment_type_id', 'appointment_types.title as appointment_type_title', 'appointment_types.code as appointment_type_code', 'appointment_types.color as appointment_type_color',
     ];
 
     public function all_appointments()
@@ -58,14 +40,8 @@ class CalendarController extends ApiBaseController
             $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->latest()
                 // ->where('status_id', '!=', APPOINTMENT_PENDING)
                 ->with([
-                    'patient',
-                    'department',
-                    'appointmentType',
-                    'treatmentType',
-                    'source',
-                    'frequency',
-                    'recurrencies',
-                    'treatmentPlan',
+                    'patient', 'department',
+                    'appointmentType', 'treatmentType', 'source', 'frequency', 'recurrencies', 'treatmentPlan',
                     'status'
                 ])->get();
 
@@ -75,21 +51,14 @@ class CalendarController extends ApiBaseController
         }
     }
 
-    public function frontOfficeAppointments()
-    {
+    public function frontOfficeAppointments(){
         try {
             $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->latest()
                 // ->where('status_id', '!=', APPOINTMENT_PENDING)
-                ->where('date', Carbon::today()->format('d-m-Y'))
+                ->where('date',  Carbon::today()->format('d-m-Y'))
                 ->with([
-                    'patient',
-                    'department',
-                    'appointmentType',
-                    'treatmentType',
-                    'source',
-                    'frequency',
-                    'recurrencies',
-                    'treatmentPlan',
+                    'patient', 'department',
+                    'appointmentType', 'treatmentType', 'source', 'frequency', 'recurrencies', 'treatmentPlan',
                     'status'
                 ])->get();
 

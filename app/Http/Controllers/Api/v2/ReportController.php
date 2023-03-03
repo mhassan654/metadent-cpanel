@@ -7,9 +7,10 @@ use App\Models\DoneTreatment;
 use App\Models\Invoice;
 use App\Models\Patient;
 use App\Models\Treatment;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
+use App\Http\Controllers\ApiBaseController;
 
-class ReportController extends BaseController
+class ReportController extends ApiBaseController
 {
     public function __construct()
     {

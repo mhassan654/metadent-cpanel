@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\City;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiBaseController;
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\StoreCityRequest;
 use App\Http\Requests\UpdateCityRequest;
 
-class CityController extends BaseController
+class CityController extends Controller
 {
     public function index(Request $request)
     {

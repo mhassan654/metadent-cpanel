@@ -506,8 +506,7 @@ class InvoicesController extends ApiV2Controller
 
     public function overdue_invoices()
     {
-        $overdue_invoices = Invoice::where('facility_id', Auth::user()->facility_id)
-            ->where('due_date', '<', Carbon::now()->format('d-m-Y'))
+        $overdue_invoices = Invoice::where('due_date', '<', Carbon::now()->format('d-m-Y'))
             ->get();
         return $this->customSuccessResponseWithPayload(count($overdue_invoices));
     }

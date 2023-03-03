@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Imports\AttendancesHistoryImport;
 use App\Models\AttendanceHistory;
 use App\Models\EmpAttendance;
-use Metadent\AuthModule\Models\Employee;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Employee;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use JamesMills\LaravelTimezone\Facades\Timezone;
 use Maatwebsite\Excel\Facades\Excel;
 
-class AttendanceHistoryController extends BaseController
+class AttendanceHistoryController extends Controller
 {
     /**
      * Display a listing of the resource.
