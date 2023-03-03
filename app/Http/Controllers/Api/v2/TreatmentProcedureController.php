@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreTreatmentProcedureRequest;
 use App\Http\Requests\UpdateTreatmentProcedureRequest;
 
-class TreatmentProcedureController extends BaseController
+class TreatmentProcedureController extends ApiBaseController
 {
     /**
      * Display a listing of the resource.

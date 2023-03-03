@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Session;
 
-class AuthenticationController extends Controller
+class AuthenticationController extends ApiBaseController
 {
     public function __construct()
     {

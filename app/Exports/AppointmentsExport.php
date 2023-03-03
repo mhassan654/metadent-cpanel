@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class AppointmentsExport implements FromCollection, withHeadings, withMapping
 {
-    protected $final_appointments;
+    protected $appointments;
 
     public function __construct($final_appointments) 
     {
@@ -22,7 +22,6 @@ class AppointmentsExport implements FromCollection, withHeadings, withMapping
     public function collection()
     {
         return Appointment::with(['patient:id,first_name,last_name','status','source','treatmentType','appointmentType','employees:id,first_name,last_name'])
-        ->where('facility_id',auth()->user()->facility_id)
         ->whereIn('id',$this->appointments)->latest()->get();
     }
 

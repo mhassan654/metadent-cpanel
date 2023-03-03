@@ -18,7 +18,7 @@ use App\Jobs\AppointmentAssignAvailableDoctorJob;
 use App\Models\Appointment;
 use App\Models\AppointmentType;
 use App\Models\Patient;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use App\Traits\AppointmentsTrait;
 use Carbon\Carbon;
 use Exception;
@@ -36,8 +36,7 @@ class AppointmentService
     {
         $controller = new Controller();
         try {
-            $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-                ->with([
+            $all_appointments = Appointment::with([
                     "patient.preferredAppointmentTime",
                     "patient.familyMembers",
                     "patient.mainDoctor",
@@ -87,7 +86,7 @@ class AppointmentService
             $appointments = DB::table('appointments')->where([
                 ['status_id', 1],
                 // ['date','>',Carbon::now()],
-                ['appointments.facility_id', '=', auth()->user()->facility_id]
+                // ['appointments.facility_id', '=', auth()->user()->facility_id]
             ])
                 ->join('patients', 'appointments.patient_id', '=', 'patients.id')
                 ->leftjoin('appointment_types', 'appointments.appointment_type_id', '=', 'appointment_types.id')
@@ -127,8 +126,7 @@ class AppointmentService
 
     public function get_today_appointments()
     {
-        return Appointment::where("facility_id", Auth::user()->facility_id)
-            ->with("patient:id,first_name,last_name,patient_phone,unique_identifier,email", "treatmentType")
+        return Appointment::with("patient:id,first_name,last_name,patient_phone,unique_identifier,email", "treatmentType")
             ->where('date', Carbon::now()->format('d-m-Y'))
             ->orderBy("date", "desc")
             ->get();
@@ -187,7 +185,7 @@ class AppointmentService
                         ) {
 
                             $new_appointment = Appointment::create([
-                                "facility_id" => Auth::user()->facility_id,
+                                "facility_id" => 1,
                                 "patient_id" => $appointment['patientId'],
                                 "type_id" => $appointment['typeId'],
                                 "status_id" => $appointment['statusId'],
@@ -241,7 +239,7 @@ class AppointmentService
                         $appointment_date = $appointment['startDate'];
 
                         $new_appointment = Appointment::create([
-                            "facility_id" => Auth::user()->facility_id,
+                            "facility_id" => 1,
                             "patient_id" => $appointment['patientId'],
                             "type_id" => $appointment['typeId'],
                             "status_id" => $appointment['statusId'],

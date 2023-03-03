@@ -123,7 +123,7 @@ class InvoicesController extends ApiV2Controller
                 "prices" => request()->prices,
                 "status" => request()->status,
                 "invoice_type" => request()->invoiceType,
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" => 1,
                 // "doctor_id" => request()->doctorId,
                 "balance_due" => $balance_due,
                 "paidamount" => $paidamount,
@@ -219,7 +219,7 @@ class InvoicesController extends ApiV2Controller
                     "prices" => request()->prices,
                     "status" => request()->status,
                     "invoice_type" => request()->invoiceType,
-                    "facility_id" => Auth::user()->facility_id,
+                    "facility_id" => 1,
                     // "doctor_id" => request()->doctorId,
                     "balance_due" => request()->balanceDue,
                     "internal_notes" => request()->internalNotes,
@@ -254,14 +254,14 @@ class InvoicesController extends ApiV2Controller
     public function allPaidInvoices()
     {
         // for paid invoices
-        $paidInvoices = Invoice::select('id', 'created_at')->where('status', 1)->where('facility_id', Auth::user()->facility_id)
+        $paidInvoices = Invoice::select('id', 'created_at')->where('status', 1)
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->created_at)->format('m');
             });
 
         // for unpaid invoices
-        $unpaidInvoices = Invoice::select('id', 'created_at')->where('status', 0)->where('facility_id', Auth::user()->facility_id)
+        $unpaidInvoices = Invoice::select('id', 'created_at')->where('status', 0)
             ->get()
             ->groupBy(function ($date) {
                 return Carbon::parse($date->created_at)->format('m');
@@ -320,7 +320,7 @@ class InvoicesController extends ApiV2Controller
     private function allInvoices()
     {
         $allInvoices = Invoice::with(["treatments", "patient:id,first_name,last_name,photo", "doctor:id,first_name,last_name"])
-            ->where('facility_id', Auth::user()->facility_id)->orderBy("created_at", "desc")->get();
+            ->orderBy("created_at", "desc")->get();
         return $this->customSuccessResponseWithPayload(InvoiceResource::collection($allInvoices));
     }
 
@@ -329,15 +329,14 @@ class InvoicesController extends ApiV2Controller
         $date = \Carbon\Carbon::now()->format('Y-m-d');
         $dailyInvoices = Invoice::with(["treatments", "patient:id,first_name,last_name", "doctor:id,first_name,last_name"])
             ->whereDate('created_at', $date)
-            ->where('facility_id', Auth::user()->facility_id)->get();
+            ->get();
         return $this->customSuccessResponseWithPayload($dailyInvoices);
     }
 
     public function paginated_invoices()
     {
         try {
-            $query_invoices = Invoice::withoutAppends()->with(["treatments", "patient:id,first_name,last_name", "doctor:id,first_name,last_name", "doctors:id,first_name,last_name"])
-                ->where('facility_id', Auth::user()->facility_id);
+            $query_invoices = Invoice::withoutAppends()->with(["treatments", "patient:id,first_name,last_name", "doctor:id,first_name,last_name", "doctors:id,first_name,last_name"]);
 
             $query_invoices->when(request("search_word"), function ($query) {
                 $search_word = request("search_word");
@@ -510,16 +509,14 @@ class InvoicesController extends ApiV2Controller
 
     public function overdue_invoices()
     {
-        $overdue_invoices = Invoice::where('facility_id', Auth::user()->facility_id)
-            ->where('due_date', '<', Carbon::now()->format('d-m-Y'))
+        $overdue_invoices = Invoice::where('due_date', '<', Carbon::now()->format('d-m-Y'))
             ->get();
         return $this->customSuccessResponseWithPayload(count($overdue_invoices));
     }
 
     public function recent_invoices()
     {
-        $recent_invoices = Invoice::with(['patient:id,first_name,last_name', 'doctor:id,first_name,last_name'])
-            ->where('facility_id', Auth::user()->facility_id)->orderBy('created_at', 'desc')->get();
+        $recent_invoices = Invoice::with(['patient:id,first_name,last_name', 'doctor:id,first_name,last_name'])->orderBy('created_at', 'desc')->get();
         return $this->customSuccessResponseWithPayload($recent_invoices);
     }
 
@@ -635,7 +632,6 @@ class InvoicesController extends ApiV2Controller
         try {
             $request_invoices = json_decode(request("invoices"));
             $invoices = Invoice::with(['treatments', 'patient:id,first_name,last_name,unique_identifier', 'doctor:id,first_name,last_name'])
-                ->where('facility_id', Auth::user()->facility_id)
                 ->whereIn('id', $request_invoices)->latest()->get();
 
             Pdf::setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
