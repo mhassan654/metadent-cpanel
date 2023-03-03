@@ -53,7 +53,7 @@ class TreatmentsController extends Controller
             "treatment_category" => request()->treatment_category_id,
             "code" => request()->code,
             "price" => request()->price,
-            "facility_id" => Auth::user()->facility_id,
+            "facility_id" => 1,
         ]);
 
         if($newTreatment)
@@ -134,18 +134,18 @@ class TreatmentsController extends Controller
 
     private function allTreatments()
     {
-        return $this->customSuccessResponseWithPayload(Treatment::with(['treatmentCategory'])->where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get());
+        return $this->customSuccessResponseWithPayload(Treatment::with(['treatmentCategory'])->orderBy("created_at", "desc")->get());
     }
 
     public function doctorTreatments()
     {
-        return $this->customSuccessResponseWithPayload(Treatment::with(['doctors'])->where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get());
+        return $this->customSuccessResponseWithPayload(Treatment::with(['doctors'])->orderBy("created_at", "desc")->get());
 
     }
 
     public function paginateTreatments()
     {
-        return $this->customSuccessResponseWithPayload(Treatment::with('treatmentCategory')->where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->paginate(17));
+        return $this->customSuccessResponseWithPayload(Treatment::with('treatmentCategory')->orderBy("created_at", "desc")->paginate(17));
     }
 
 
