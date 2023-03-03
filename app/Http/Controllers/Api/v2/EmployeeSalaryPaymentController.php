@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EmployeeSalaryPayment;
 use Illuminate\Support\Facades\Validator;
 
-class EmployeeSalaryPaymentController extends BaseController
+class EmployeeSalaryPaymentController extends Controller
 {
     /**
      * Display a listing of the resource.

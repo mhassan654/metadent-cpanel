@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EmployeeSalarySetup;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Services\EmployeeSalarySetup\EmployeeSalarySetupListService;
 
-class EmployeeSalarySetupController extends BaseController
+class EmployeeSalarySetupController extends Controller
 {
     /**
      * Display a listing of the resource.

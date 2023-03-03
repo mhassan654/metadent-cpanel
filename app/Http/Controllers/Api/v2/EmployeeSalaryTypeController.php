@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\EmployeeSalaryType;
 
-class EmployeeSalaryTypeController extends BaseController
+class EmployeeSalaryTypeController extends Controller
 {
     /**
      * Display a listing of the resource.

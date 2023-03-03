@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\DoneTreatment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class DoneTreatmentsController extends BaseController
+class DoneTreatmentsController extends Controller
 {
     public function __construct()
     {
@@ -44,7 +45,7 @@ class DoneTreatmentsController extends BaseController
                 "treatment_complete" => request()->treatmentComplete,
                 "payment_status" => request()->paymentStatus,
                 "treatment_price" => request()->treatmentPrice,
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" => 1,
             ]);
             if($doneTreatment):
                 return $this->get_done_treatments_by_patient();
@@ -75,7 +76,7 @@ class DoneTreatmentsController extends BaseController
 
     private function allDoneTreatments()
     {
-        return $this->customSuccessResponseWithPayload(DoneTreatment::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get());
+        return $this->customSuccessResponseWithPayload(DoneTreatment::orderBy("created_at", "desc")->get());
     }
 
     public function get_done_treatments_by_patient() {

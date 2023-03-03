@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\FamilyMember;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class FamilyMemberController extends BaseController
+class FamilyMemberController extends Controller
 {
     public function __construct()
     {
@@ -181,7 +182,7 @@ class FamilyMemberController extends BaseController
                     $patient->first_name = request()->firstName;
                     $patient->last_name = request()->lastName;
                     $patient->middle_name = request()->middleName;
-                    $patient->facility_id = Auth::user()->facility_id;
+                    $patient->facility_id = 1;
                     $patient->birth_date = request()->dateOfBirth;
                     $patient->email = request()->email;
                     $patient->gender = request()->gender;

@@ -3,15 +3,14 @@
 
 namespace App\Http\Controllers\Api\v2;
 
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\AutoMail;
 use App\Models\AutoMailCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 
-class AutoMailController extends BaseController {
+class AutoMailController extends Controller {
 
     public function __construct()
     {

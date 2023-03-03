@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v2;
 
 // use DB;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\chatEmployeeResource;
 use App\Mail\Emailling;
 use App\Mail\GeneralMail;
@@ -10,12 +11,12 @@ use App\Mail\ReplyZorgmail;
 use App\Models\Attachmentsdocs;
 use App\Models\Chatting;
 use App\Models\Draft;
+use App\Models\Employee;
 use App\Models\onboardingDoc;
 use App\Models\Patient;
 use App\Models\replying;
 use App\Models\smsPatient;
 use App\Models\User;
-use Metadent\AuthModule\Models\Employee;
 use App\Notifications\EmailNotification;
 use App\Services\GeneralComService\GeneralComService;
 use App\Services\onBoardDocuments\OnBoardDocuments;
@@ -38,7 +39,7 @@ use Throwable;
 
 // use App\zorgmailService\smsService;
 
-class ChatingController extends BaseController
+class ChatingController extends Controller
 {
     protected $user;
 
@@ -1557,7 +1558,7 @@ class ChatingController extends BaseController
                 'subject' => request()->subject,
                 'message' => request()->message,
             ];
-            \Mail::mailer('smtp')->to($data['email'])->send(new GeneralMail($data));
+            Mail::mailer('smtp')->to($data['email'])->send(new GeneralMail($data));
 
             return $this->customSuccessResponseWithMessage('email sent successfully');
         } catch (\Throwable$th) {

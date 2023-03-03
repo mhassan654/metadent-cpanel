@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\EmployeeType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Validator;
 
-class EmployeeTypeController extends BaseController
+class EmployeeTypeController extends Controller
 {
     public function __construct()
     {

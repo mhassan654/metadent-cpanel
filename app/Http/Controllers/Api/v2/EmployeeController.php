@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\v2;
 use App\Exports\DoctorTreatmentsExport;
 use App\Exports\EmployeeExport;
 use App\Exports\EmployeeLogExport;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Modules\Core\LogActivity;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use App\Services\Employee\EmployeeService;
 use App\Traits\PasswordChecker;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
-class EmployeeController extends BaseController
+class EmployeeController extends Controller
 {
     use PasswordChecker;
 

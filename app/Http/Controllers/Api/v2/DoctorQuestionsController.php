@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DoctorQuestion;
 use Illuminate\Support\Facades\Validator;
 
-class DoctorQuestionsController extends BaseController
+class DoctorQuestionsController extends Controller
 {
     public function __construct()
     {

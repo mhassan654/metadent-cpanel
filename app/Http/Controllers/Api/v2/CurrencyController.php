@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Currency;
 use App\Http\Controllers\ApiBaseController;
 use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use Illuminate\Support\Facades\Validator;
 
-class CurrencyController extends BaseController
+class CurrencyController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -3,15 +3,14 @@
 
 namespace App\Http\Controllers\Api\v2;
 
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Treatment;
 use App\Models\BundledTreatment;
 use App\Models\DoneTreatment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class BundledTreatmentsController extends BaseController {
+class BundledTreatmentsController extends Controller {
 
     public function __construct()
     {

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\DoneProcedure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DoneProceduresController extends BaseController
+class DoneProceduresController extends Controller
 {
     public function __construct()
     {
@@ -36,7 +37,7 @@ class DoneProceduresController extends BaseController
                 "procedure" => request()->procedure,
                 "complete" => request()->complete,
                 "procedure_price" => request()->procedurePrice,
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" =>1,
             ]);
 
             if($doneProcedure)
@@ -71,6 +72,6 @@ class DoneProceduresController extends BaseController
 
     private function allDoneProcedures()
     {
-        return $this->customSuccessResponseWithPayload(DoneProcedure::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get());
+        return $this->customSuccessResponseWithPayload(DoneProcedure::orderBy("created_at", "desc")->get());
     }
 }

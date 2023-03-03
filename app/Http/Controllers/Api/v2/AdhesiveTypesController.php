@@ -19,7 +19,7 @@ class AdhesiveTypesController extends Controller
     // function for fetching/retrieving all adhesive types
     public function index()
     {
-        return $this->customSuccessResponseWithPayload(AdhesiveType::where('facility_id', Auth::user()->facility_id)->get());
+        return $this->customSuccessResponseWithPayload(AdhesiveType::all());
     }
 
     // function for creating a new adhesive type
@@ -41,7 +41,7 @@ class AdhesiveTypesController extends Controller
         }
         try {
             $new_type = AdhesiveType::create([
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" => 1,
                 "adhesive_type" => $request->adhesiveType,
                 "code" => $request->code,
             ]);
@@ -88,7 +88,7 @@ class AdhesiveTypesController extends Controller
             if($type)
             {
                 $type->update([
-                    "facility_id" => Auth::user()->facility_id,
+                    "facility_id" => 1,
                     "adhesive_type" => $request->adhesiveType,
                     "code" => $request->code,
                 ]);

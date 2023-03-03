@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\CarePlan;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ApiBaseController;
 
-class CarePlanController extends BaseController
+class CarePlanController extends Controller
 {
     /**
      * Display a listing of the resource.

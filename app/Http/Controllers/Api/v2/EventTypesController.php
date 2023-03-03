@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\EventType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class EventTypesController extends BaseController
+class EventTypesController extends Controller
 {
     public function construct()
     {
@@ -102,7 +103,7 @@ class EventTypesController extends BaseController
 
     private function allTypes()
     {
-        $all_appointment_types = EventType::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get();
+        $all_appointment_types = EventType::orderBy("created_at", "desc")->get();
 
         return $this->customSuccessResponseWithPayload($all_appointment_types);
     }

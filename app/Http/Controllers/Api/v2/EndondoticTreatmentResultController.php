@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ApiBaseController;
 use App\Models\EndondoticTreatmentResult;
 use Illuminate\Support\Facades\Validator;
 
-class EndondoticTreatmentResultController extends BaseController
+class EndondoticTreatmentResultController extends Controller
 {
     public function __construct()
     {

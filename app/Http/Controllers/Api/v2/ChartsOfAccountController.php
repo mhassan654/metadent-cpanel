@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\v2;
 
-use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ChartsOfAccountController extends BaseController
+class ChartsOfAccountController extends Controller
 {
     //
 }

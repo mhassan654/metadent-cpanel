@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\CompositeType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class CompositeTypesController extends BaseController
+class CompositeTypesController extends Controller
 {
     public function __construct()
     {
@@ -18,7 +19,7 @@ class CompositeTypesController extends BaseController
     // function for fetching/retrieving all adhesive types
     public function index()
     {
-        return $this->customSuccessResponseWithPayload(CompositeType::where('facility_id', Auth::user()->facility_id)->get());
+        return $this->customSuccessResponseWithPayload(CompositeType::all());
     }
 
     // function for creating a new adhesive type
@@ -41,7 +42,7 @@ class CompositeTypesController extends BaseController
         }
         try {
             $new_type = CompositeType::create([
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" => 1,
                 "material_type" => $request->materialType,
                 "code" => $request->code,
                 "material_name" => $request->materialName,
@@ -104,7 +105,7 @@ class CompositeTypesController extends BaseController
             if($type)
             {
                 $type->update([
-                    "facility_id" => Auth::user()->facility_id,
+                    "facility_id" => 1,
                     "material_type" => $request->materialType,
                     "code" => $request->code,
                     "material_name" => $request->materialName
