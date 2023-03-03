@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v2\Companies;
+namespace App\Http\Controllers\Api\v2;
 
 use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
