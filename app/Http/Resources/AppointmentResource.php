@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Employee;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AppointmentResource extends JsonResource
@@ -39,7 +40,7 @@ class AppointmentResource extends JsonResource
             "treatment_plan" => $this->treatmentPlan,
             "phase" => $this->phase_id,
             'is_recallable' => $this->is_recallable,
-            "doctors" => \Metadent\AuthModule\Models\Employee::with(['department:id,department','employeeType:id,type'])
+            "doctors" => Employee::with(['department:id,department','employeeType:id,type'])
                              ->whereIn('id',$this->doctors)
                              ->get(['id','first_name','last_name','weeks','week_days','department_id','employee_type_id','frequency_id','contract_start_date','contract_end_date','availability','interval'])
                              ->makeHidden(['roles','permissions'])
