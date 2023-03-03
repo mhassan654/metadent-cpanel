@@ -193,7 +193,7 @@ class AppointmentsController extends ApiBaseController
                     foreach ($child_appointments as $appointment) {
 
                         $appointment->update([
-                            "facility_id" => Auth::user()->facility_id,
+                            "facility_id" => 1,
                             "patient_id" => request()->patientId,
                             "type_id" => request()->typeId,
                             "source_id" => request()->sourceId,
@@ -984,7 +984,7 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $final_patient_list = [];
-            $waiting_appointments = Appointment::orderBy('created_at', 'desc')->where('status_id', 3)->where('facility_id', Auth::user()->facility_id)->latest()->get();
+            $waiting_appointments = Appointment::orderBy('created_at', 'desc')->where('status_id', 3)->latest()->get();
             if ($waiting_appointments) {
                 foreach ($waiting_appointments as $appointment) {
                     $final_patient_list[] = Patient::with(['mainDoctor', 'familyMembers', 'preferredAppointmentTime'])

@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\ApiBaseController;
 
-class EmployeeController extends Controller
+class EmployeeController extends ApiBaseController
 {
     use PasswordChecker;
 
@@ -74,7 +75,7 @@ class EmployeeController extends Controller
                     $join->on('employees.rate_type', '=', 'rate_types.id');
                 })
                 ->orderBy('employees.id', 'DESC')
-                ->groupBy('employees.id')
+                // ->groupBy('employees.id')
                 ->get();
 
             return $this->customSuccessResponseWithPayload($all_employees);
@@ -655,7 +656,7 @@ class EmployeeController extends Controller
     {
         try {
             $query_employees = Employee::with(['department', 'city', 'position', 'reportingTo', 'country', 'latestLog']);
-
+            
             $query_employees->when(request("departments"), function ($query) {
                 $departments = request("departments");
                 return $query->whereIn('department_id', $departments);
@@ -734,7 +735,6 @@ class EmployeeController extends Controller
                     }
                 );
             });
-
             $paginated_employees = $query_employees->latest()->paginate(20);
             LogActivity::addToLog('Read Employee List', 'Read');
             return $this->customSuccessResponseWithPayload($paginated_employees);

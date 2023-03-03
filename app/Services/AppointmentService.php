@@ -84,7 +84,9 @@ class AppointmentService
         $controller = new Controller();
         try {
             $appointments = DB::table('appointments')->where([
-                ['status_id', 1]
+                ['status_id', 1],
+                // ['date','>',Carbon::now()],
+                // ['appointments.facility_id', '=', auth()->user()->facility_id]
             ])
                 ->join('patients', 'appointments.patient_id', '=', 'patients.id')
                 ->leftjoin('appointment_types', 'appointments.appointment_type_id', '=', 'appointment_types.id')

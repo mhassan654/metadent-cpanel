@@ -6,7 +6,7 @@ use App\Http\Controllers\ApiBaseController;
 use Illuminate\Http\Request;
 use App\Models\Timezone;
 
-class TimezoneController extends BaseController
+class TimezoneController extends ApiBaseController
 {
     public function all()
     {

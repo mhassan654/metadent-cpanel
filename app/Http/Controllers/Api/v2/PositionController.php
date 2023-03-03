@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PositionController extends BaseController
+class PositionController extends ApiBaseController
 {
     /**
      * Display a listing of the resource.

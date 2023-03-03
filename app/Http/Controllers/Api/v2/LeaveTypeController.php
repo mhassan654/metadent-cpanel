@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class LeaveTypeController extends BaseController
+class LeaveTypeController extends ApiBaseController
 {
     public function __construct()
     {

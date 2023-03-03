@@ -8,7 +8,7 @@
  *website: https://muwongehassan.com
  */
 
-use App\Http\Controllers\v2\SlotsController;
+use App\Http\Controllers\Api\v2\SlotsController;
 use Illuminate\Support\Facades\Route;
 
 // Route::post("slots", [SlotController::class, "index"]);

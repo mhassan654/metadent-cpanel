@@ -7,7 +7,7 @@ use App\Mail\SendCodeMail;
 use App\Models\Department;
 use App\Models\Appointment;
 use App\Models\EmployeeCode;
-use App\Modules\Core\LogActivity;
+use App\Models\LogActivity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;

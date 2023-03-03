@@ -12,34 +12,60 @@ use App\Traits\FrontOfficeTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ApiBaseController;
 
-class CalendarController extends Controller
+class CalendarController extends ApiBaseController
 {
     use FrontOfficeTrait;
 
     public function __construct()
     {
-//        $this->middleware(["auth:api"]);
+        //        $this->middleware(["auth:api"]);
     }
     private $appointment_columns_filter = [
-        'appointments.id', 'appointments.date', 'appointments.slots', 'appointments.doctors', 'appointments.comments', 'appointments.appointment_type_id',
-        'patients.id as patient_id', 'patients.gender', 'patients.first_name', 'patients.last_name', 'patients.birth_date', 'patients.country', 'patients.city',
-        'treatment_types.id as treatment_type_id', 'treatment_types.title', 'treatment_types.color',
-        'appointment_sources.id as source_id', 'appointment_sources.source',
-        'appointment_statuses.id as status_id', 'appointment_statuses.status',
-        'frequencies.id as frequency_id', 'frequencies.label as frequency_label',
-        'appointment_types.id as appointment_type_id', 'appointment_types.title as appointment_type_title', 'appointment_types.code as appointment_type_code', 'appointment_types.color as appointment_type_color',
+        'appointments.id',
+        'appointments.date',
+        'appointments.slots',
+        'appointments.doctors',
+        'appointments.comments',
+        'appointments.appointment_type_id',
+        'patients.id as patient_id',
+        'patients.gender',
+        'patients.first_name',
+        'patients.last_name',
+        'patients.birth_date',
+        'patients.country',
+        'patients.city',
+        'treatment_types.id as treatment_type_id',
+        'treatment_types.title',
+        'treatment_types.color',
+        'appointment_sources.id as source_id',
+        'appointment_sources.source',
+        'appointment_statuses.id as status_id',
+        'appointment_statuses.status',
+        'frequencies.id as frequency_id',
+        'frequencies.label as frequency_label',
+        'appointment_types.id as appointment_type_id',
+        'appointment_types.title as appointment_type_title',
+        'appointment_types.code as appointment_type_code',
+        'appointment_types.color as appointment_type_color',
     ];
 
     public function all_appointments()
     {
 
         try {
-            $all_appointments = Appointment::latest()
+            $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->latest()
                 // ->where('status_id', '!=', APPOINTMENT_PENDING)
                 ->with([
-                    'patient', 'department',
-                    'appointmentType', 'treatmentType', 'source', 'frequency', 'recurrencies', 'treatmentPlan',
+                    'patient',
+                    'department',
+                    'appointmentType',
+                    'treatmentType',
+                    'source',
+                    'frequency',
+                    'recurrencies',
+                    'treatmentPlan',
                     'status'
                 ])->get();
 
@@ -49,14 +75,21 @@ class CalendarController extends Controller
         }
     }
 
-    public function frontOfficeAppointments(){
+    public function frontOfficeAppointments()
+    {
         try {
-            $all_appointments = Appointment::latest()
+            $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->latest()
                 // ->where('status_id', '!=', APPOINTMENT_PENDING)
-                ->where('date',  Carbon::today()->format('d-m-Y'))
+                ->where('date', Carbon::today()->format('d-m-Y'))
                 ->with([
-                    'patient', 'department',
-                    'appointmentType', 'treatmentType', 'source', 'frequency', 'recurrencies', 'treatmentPlan',
+                    'patient',
+                    'department',
+                    'appointmentType',
+                    'treatmentType',
+                    'source',
+                    'frequency',
+                    'recurrencies',
+                    'treatmentPlan',
                     'status'
                 ])->get();
 
@@ -70,7 +103,8 @@ class CalendarController extends Controller
     {
 
         try {
-            $all_events = Event::with('frequency')->get();
+            $all_events = Event::where('facility_id', Auth::user()->facility_id)
+                ->with('frequency')->get();
             $all_events = EventResource::collection($all_events);
             return $this->customSuccessResponseWithPayload($all_events);
         } catch (\Throwable $th) {
@@ -107,6 +141,7 @@ class CalendarController extends Controller
             // });
 
             $all_doctors = Employee::with(['employeeType', 'department'])
+                ->where('facility_id', Auth::user()->facility_id)
                 ->whereIn('id', $all_doctor_ids)
                 ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id', 'frequency_id', 'contract_start_date', 'contract_end_date', 'availability', 'interval'])
                 ->makeHidden(['roles', 'permissions']);
@@ -120,6 +155,7 @@ class CalendarController extends Controller
     public function assistants()
     {
         $all_assistants = Employee::with(['department', 'employeeType'])
+            ->where('facility_id', Auth::user()->facility_id)
             ->whereHas('employeeType', function ($query) {
                 $query->where('type', 'LIKE', '%' . 'Assistant' . '%');
             })
@@ -148,6 +184,7 @@ class CalendarController extends Controller
             $doctor_ids = $this->doctor_ids();
             $assistant_doctor_ids = array_unique(array_merge($assistant_ids, $doctor_ids), SORT_REGULAR);
             $all_front_office_users = Employee::with(['department', 'employeeType'])
+                ->where('facility_id', Auth::user()->facility_id)
                 ->whereNotIn('id', $assistant_doctor_ids)
                 ->get(['id', 'first_name', 'last_name', 'weeks', 'week_days', 'department_id', 'employee_type_id', 'frequency_id', 'contract_start_date', 'contract_end_date', 'availability', 'interval'])
                 ->makeHidden(['roles', 'permissions']);
@@ -163,7 +200,8 @@ class CalendarController extends Controller
                 $assistant_ids = $this->assistants()->pluck('id')->toArray();
                 $doctor_ids = $this->doctor_ids();
                 $assistant_doctor_ids = array_unique(array_merge($assistant_ids, $doctor_ids), SORT_REGULAR);
-                $doctor_assistants = Employee::whereIn('id', $assistant_doctor_ids)
+                $doctor_assistants = Employee::where('facility_id', Auth::user()->facility_id)
+                    ->whereIn('id', $assistant_doctor_ids)
                     ->get(['id', 'first_name', 'last_name'])
                     ->makeHidden(['roles', 'permissions']);
                 return $this->customSuccessResponseWithPayload($doctor_assistants);

@@ -22,7 +22,7 @@ use App\Services\CustomLogger\Models\LogMessage;
 /**
  * For managing various systems related settings
  */
-class SettingController extends BaseController
+class SettingController extends ApiBaseController
 {
     /**
      * Display a listing of the resource.

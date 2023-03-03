@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class LeaveController extends BaseController
+class LeaveController extends ApiBaseController
 {
     public function __construct()
     {
