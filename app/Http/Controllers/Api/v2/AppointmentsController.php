@@ -33,7 +33,6 @@ class AppointmentsController extends ApiBaseController
     public function __construct(AppointmentService $appointmentService)
     {
         $this->appointmentService = $appointmentService;
-        $this->middleware(["auth:api"]);
     }
 
     //TIED TO v1/patients/all ROUTE IN THE api.php FILE IN THE ROUTES FOLDER
