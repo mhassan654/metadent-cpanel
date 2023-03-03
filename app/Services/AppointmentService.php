@@ -17,6 +17,7 @@ use App\Http\Resources\AppointmentResource;
 use App\Jobs\AppointmentAssignAvailableDoctorJob;
 use App\Models\Appointment;
 use App\Models\AppointmentType;
+use App\Models\Employee;
 use App\Models\Patient;
 use Metadent\AuthModule\Models\Employee;
 use App\Traits\AppointmentsTrait;
@@ -127,8 +128,7 @@ class AppointmentService
 
     public function get_today_appointments()
     {
-        return Appointment::where("facility_id", Auth::user()->facility_id)
-            ->with("patient:id,first_name,last_name,patient_phone,unique_identifier,email", "treatmentType")
+        return Appointment::with("patient:id,first_name,last_name,patient_phone,unique_identifier,email", "treatmentType")
             ->where('date', Carbon::now()->format('d-m-Y'))
             ->orderBy("date", "desc")
             ->get();
@@ -187,7 +187,7 @@ class AppointmentService
                         ) {
 
                             $new_appointment = Appointment::create([
-                                "facility_id" => Auth::user()->facility_id,
+                                "facility_id" => 1,
                                 "patient_id" => $appointment['patientId'],
                                 "type_id" => $appointment['typeId'],
                                 "status_id" => $appointment['statusId'],
@@ -241,7 +241,7 @@ class AppointmentService
                         $appointment_date = $appointment['startDate'];
 
                         $new_appointment = Appointment::create([
-                            "facility_id" => Auth::user()->facility_id,
+                            "facility_id" => 1,
                             "patient_id" => $appointment['patientId'],
                             "type_id" => $appointment['typeId'],
                             "status_id" => $appointment['statusId'],
