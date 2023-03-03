@@ -73,8 +73,7 @@ class AppointmentsController extends ApiBaseController
     public function single_doctor_appointments()
     {
         try {
-            $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-                ->with(["patient", "status", "source", "appointmentType", "treatmentType", 'frequency', 'department'])
+            $all_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", 'frequency', 'department'])
                 ->orderBy("date", "asc")->whereJsonContains('doctors', [$this->authUser()->id])
                 ->get()
                 ->makeHidden(['doctors']);
@@ -240,7 +239,7 @@ class AppointmentsController extends ApiBaseController
                                 )
                             ):
                                 $new_appointment = Appointment::create([
-                                    "facility_id" => Auth::user()->facility_id,
+                                    "facility_id" => 1,
                                     "patient_id" => request()->patientId,
                                     "status_id" => request()->statusId,
                                     "frequency_id" => request()->frequencyId,
@@ -777,8 +776,7 @@ class AppointmentsController extends ApiBaseController
      */
     public function waiting_room_doctor()
     {
-        $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-            ->where("status_id", APPOINTMENT_WAITING)
+        $all_appointments = Appointment::where("status_id", APPOINTMENT_WAITING)
             ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
             ->whereJsonContains('doctors', [$this->authUser()->id])
             ->get()->makeHidden(['doctors']);
@@ -790,8 +788,7 @@ class AppointmentsController extends ApiBaseController
     // getting all appointments in the waiting room
     public function waiting_room()
     {
-        $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-            ->where("status_id", APPOINTMENT_WAITING)
+        $all_appointments = Appointment::where("status_id", APPOINTMENT_WAITING)
             ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
             ->orderBy("checkin_time", "desc")
             ->get();
@@ -820,8 +817,7 @@ class AppointmentsController extends ApiBaseController
     // getting all appointments in the waiting room
     public function closed_appointments()
     {
-        $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-            ->where("status_id", APPOINTMENT_CLOSED)
+        $all_appointments = Appointment::where("status_id", APPOINTMENT_CLOSED)
             ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
             ->orderBy("date", "asc")
             ->get();
@@ -853,8 +849,7 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $response = [];
-            $completed_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-                ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
+            $completed_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
                 ->where('status_id', 4)
                 ->orderBy('date', 'asc')
                 ->get();
@@ -877,8 +872,7 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $response = [];
-            $cancelled_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-                ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
+            $cancelled_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
                 ->where('status_id', 5)
                 ->orderBy('date', 'asc')
                 ->get();
@@ -901,8 +895,7 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $response = [];
-            $serving_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-                ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
+            $serving_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
                 ->where('status_id', 7)
                 ->orderBy('date', 'asc')
                 ->get();
@@ -924,8 +917,7 @@ class AppointmentsController extends ApiBaseController
     // fetch all doctor appointments
     public function doctor_appointments()
     {
-        $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-            ->with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
+        $all_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
             ->orderBy("date", "asc")->whereJsonContains('doctors', [$this->authUser()->id])
             ->get()
             ->makeHidden(['doctors']);
@@ -955,7 +947,6 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $completed_appointments_today = Appointment::where('date', Carbon::now()->format('d-m-Y'))
-                ->where('facility_id', Auth::user()->facility_id)
                 ->where('status_id', 4)
                 ->count();
             LogActivity::addToLog("Read Appointments Completed today", "Read");
@@ -1015,7 +1006,6 @@ class AppointmentsController extends ApiBaseController
         try {
             $appointment = [];
             $serving_appointment = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", "period", "department"])
-                ->where('facility_id', Auth::user()->facility_id)
                 ->whereHas('department', function ($query) {
                     $query->where('department', 'LIKE', 'Front Office');
                 })
@@ -1081,8 +1071,7 @@ class AppointmentsController extends ApiBaseController
                 request()->all(),
                 ['year' => 'nullable|max:4|min:4', "month_range" => 'nullable|date_format:m-Y']
             );
-            $query_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-                ->with([
+            $query_appointments = Appointment::with([
                     "patient",
                     "status",
                     "source",
@@ -1178,8 +1167,7 @@ class AppointmentsController extends ApiBaseController
                 request()->all(),
                 ['year' => 'nullable|max:4|min:4', "month_range" => 'nullable|date_format:m-Y']
             );
-            $query_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-                ->with([
+            $query_appointments = Appointment::with([
                     "patient",
                     "status",
                     "source",
@@ -1276,8 +1264,7 @@ class AppointmentsController extends ApiBaseController
                 request()->all(),
                 ['year' => 'nullable|max:4|min:4', "month_range" => 'nullable|date_format:m-Y']
             );
-            $query_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-                ->with([
+            $query_appointments = Appointment::with([
                     "patient",
                     "status",
                     "source",
@@ -1426,8 +1413,7 @@ class AppointmentsController extends ApiBaseController
 
     public function recallAppointments(){
         try {
-            $appointments = Appointment::where('is_recallable', true)
-                ->where('facility_id', Auth::user()->facility_id)->latest()
+            $appointments = Appointment::where('is_recallable', true)->latest()
                 ->where('date','>=' , Carbon::today()->format('d-m-Y'))
                 ->with([
                     'patient', 'department',
