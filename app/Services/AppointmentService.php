@@ -19,7 +19,6 @@ use App\Models\Appointment;
 use App\Models\AppointmentType;
 use App\Models\Employee;
 use App\Models\Patient;
-use Metadent\AuthModule\Models\Employee;
 use App\Traits\AppointmentsTrait;
 use Carbon\Carbon;
 use Exception;
@@ -37,8 +36,7 @@ class AppointmentService
     {
         $controller = new Controller();
         try {
-            $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)
-                ->with([
+            $all_appointments = Appointment::with([
                     "patient.preferredAppointmentTime",
                     "patient.familyMembers",
                     "patient.mainDoctor",
@@ -86,9 +84,7 @@ class AppointmentService
         $controller = new Controller();
         try {
             $appointments = DB::table('appointments')->where([
-                ['status_id', 1],
-                // ['date','>',Carbon::now()],
-                ['appointments.facility_id', '=', auth()->user()->facility_id]
+                ['status_id', 1]
             ])
                 ->join('patients', 'appointments.patient_id', '=', 'patients.id')
                 ->leftjoin('appointment_types', 'appointments.appointment_type_id', '=', 'appointment_types.id')
