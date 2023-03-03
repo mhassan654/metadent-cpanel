@@ -27,7 +27,7 @@ class TaskController extends Controller
             "task" => request()->task,
             "due_date" => request()->dueDate,
             "user_id" => Auth::user()->id,
-            "facility_id" => Auth::user()->facility_id,
+            "facility_id" => 1,
         ]);
 
         if($task)
@@ -78,13 +78,11 @@ class TaskController extends Controller
 
     private function allTasks()
     {
-        return $this->customSuccessResponseWithPayload(Task::where("facility_id", Auth::user()->facility_id)
-        ->where("user_id", Auth::user()->id)->orderBy("due_date", "desc")->get());
+        return $this->customSuccessResponseWithPayload(Task::where("user_id", Auth::user()->id)->orderBy("due_date", "desc")->get());
     }
 
     private function allEmployeeBasedTasks()
     {
-        return $this->customSuccessResponseWithPayload(Task::where("facility_id", Auth::user()->facility_id)
-        ->where("employee_id", Auth::user()->id)->orderBy("due_date", "desc")->get());
+        return $this->customSuccessResponseWithPayload(Task::where("employee_id", Auth::user()->id)->orderBy("due_date", "desc")->get());
     }
 }

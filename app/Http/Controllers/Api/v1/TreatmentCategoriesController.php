@@ -56,7 +56,7 @@ class TreatmentCategoriesController extends Controller
         $newTreatmentCategory = TreatmentCategory::create([
             "name" => $request->name,
             "parent_id" => $request->parent_id ? $request->parent_id : 0,
-            "facility_id" => Auth::user()->facility_id,
+            "facility_id" => 1,
         ]);
 
         if($newTreatmentCategory)

@@ -7,7 +7,7 @@ use App\Exports\EmployeeExport;
 use App\Exports\EmployeeLogExport;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Modules\Core\LogActivity;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use App\Services\Employee\EmployeeService;
 use App\Traits\PasswordChecker;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\ApiBaseController;
 
-class EmployeeController extends BaseController
+class EmployeeController extends ApiBaseController
 {
     use PasswordChecker;
 
@@ -73,7 +74,7 @@ class EmployeeController extends BaseController
                     $join->on('employees.rate_type', '=', 'rate_types.id');
                 })
                 ->orderBy('employees.id', 'DESC')
-                ->groupBy('employees.id')
+                // ->groupBy('employees.id')
                 ->get();
 
             return $this->customSuccessResponseWithPayload($all_employees);

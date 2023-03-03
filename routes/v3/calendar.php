@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\v3\CalendarController;
+use App\Http\Controllers\Api\v3\CalendarController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('calendar')->group(function() {

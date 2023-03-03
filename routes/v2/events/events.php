@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v2\EventsController;
 
-Route::group(['prefix' =>'events', 'middleware' => ['jwt.verify']],function(){
+Route::group(['prefix' =>'events', 'middleware' => ['api']],function(){
 //Route::group(['prefix' =>'events', 'middleware' => ['role:Doctor|Super-Admin']],function(){
 
     // All the event route

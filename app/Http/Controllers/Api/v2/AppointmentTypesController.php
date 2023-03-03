@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Api\v2;
 
 use App\Models\Appointment;
 use App\Models\AppointmentType;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApiBaseController;
 
-class AppointmentTypesController extends BaseController
+class AppointmentTypesController extends ApiBaseController
 {
 
     public function construct()
@@ -37,7 +38,7 @@ class AppointmentTypesController extends BaseController
             'doctors' => [],
             'week_days' => Arr::flatten(array_unique(request()->weekDays)),
             'for_web' => request()->forWeb,
-            'facility_id' => Auth::user()->facility_id,
+            'facility_id' => 1
         ]);
 
         return $this->customSuccessResponseWithPayload($new_appointment);
@@ -127,8 +128,8 @@ class AppointmentTypesController extends BaseController
 
     private function allTypes()
     {
-        $all_appointment_types = AppointmentType::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get();
-        $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)->get();
+        $all_appointment_types = AppointmentType::orderBy("created_at", "desc")->get();
+        $all_appointments = Appointment::all();
 
         foreach ($all_appointment_types as $appointment_type):
 

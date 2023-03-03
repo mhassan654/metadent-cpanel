@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\TreatmentBridgeConnector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
-class TreatmentsBridgesConnectorController extends BaseController
+class TreatmentsBridgesConnectorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +21,7 @@ class TreatmentsBridgesConnectorController extends BaseController
      */
     public function index(): JsonResponse
     {
-        return $this->customSuccessResponseWithPayload(TreatmentBridgeConnector::where('facility_id', Auth::user()->facility_id)->get());
+        return $this->customSuccessResponseWithPayload(TreatmentBridgeConnector::all());
     }
 
 
@@ -48,7 +49,7 @@ class TreatmentsBridgesConnectorController extends BaseController
         }
         try {
             $new_frame = new TreatmentBridgeConnector;
-            $new_frame->facility_id = Auth::user()->facility_id;
+            $new_frame->facility_id = 1;
             $new_frame->connector_name = $request->connectorName;
             $new_frame->connector_code= $request->connectorCode;
             $new_frame->save();

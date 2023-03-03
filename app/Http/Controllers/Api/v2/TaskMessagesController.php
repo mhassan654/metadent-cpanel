@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\TaskMessage;
-use Metadent\AuthModule\Models\Employee;
+use App\Models\Employee;
 use Illuminate\Support\Facades\Validator;
 
-class TaskMessagesController extends BaseController
+class TaskMessagesController extends Controller
 {
     public function __construct()
     {

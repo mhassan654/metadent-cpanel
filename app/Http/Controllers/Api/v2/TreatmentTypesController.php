@@ -10,7 +10,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
-use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\Treatment;
 use App\Models\TreatmentType;
 use Illuminate\Http\Request;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class TreatmentTypesController extends BaseController
+class TreatmentTypesController extends Controller
 {
     public function __construct()
     {
@@ -48,7 +48,7 @@ class TreatmentTypesController extends BaseController
 
         try {
             $new_type = TreatmentType::create([
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" => 1,
                 "title" => $request->title,
                 "procedures" => $request->procedures,
                 "color" => $request->color,

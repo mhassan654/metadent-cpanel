@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 // Patients routes section
 //Route::prefix("invoices",)->group(function(){
-Route::group(['prefix' =>'invoices', 'middleware' => ['auth:api']],function(){
+Route::group(['prefix' =>'invoices', 'middleware' => ['api']],function(){
     // All the invoice route
     Route::post('all', [InvoicesController::class, 'index'])->name('invoices.index');
 

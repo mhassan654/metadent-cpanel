@@ -11,11 +11,11 @@ use App\Mail\AppointmentInvitation;
 use App\Mail\PatientCredentials;
 use App\Models\Appointment;
 use App\Models\AutoMail;
+use App\Models\Employee;
 use App\Models\HealthHistory;
 use App\Models\Patient;
 use App\Modules\Common\Helper;
 use App\Modules\Core\LogActivity;
-use App\Models\Employee;
 use App\Traits\FrontOfficeTrait;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -162,7 +162,7 @@ class PatientsController extends Controller
 
             // if the patient exists
             if ($patient) {
-                $history = HealthHistory::where("facility_id", 1)->where("patient_id", $patient->id)->first();
+                $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", $patient->id)->first();
 
                 $patient->healthHistory = $history ? $history->history : "";
 
@@ -292,11 +292,11 @@ class PatientsController extends Controller
                 if ($patient) {
                     // is_null, empty, is_string
                     if (request()->healthHistory != null && request()->healthHistory != "" && request()->healthHistory !== " ") {
-                        $history = HealthHistory::where("facility_id", 1)->where("patient_id", request()->patientId)->first();
+                        $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", request()->patientId)->first();
 
                         HealthHistory::create([
                             "patient_id" => $patient->id,
-                            "facility_id" => 1,
+                            "facility_id" => Auth::user()->facility_id,
                             "history" => request()->healthHistory,
                         ]);
                     }
@@ -363,7 +363,7 @@ class PatientsController extends Controller
                     "guardian_email" => request()->guardianEmail == "" ? null : request()->guardianEmail,
                     "guardian_address" => request()->guardianAddress == "" ? null : request()->guardianAddress,
                     "reviews" => request()->reviews == "" ? null : request()->reviews,
-                    "facility_id" => 1,
+                    "facility_id" => Auth::user()->facility_id,
                     "citizen_service_number" => request()->citizenServiceNumber == "" ? null : request()->citizenServiceNumber,
                     "nok_phone_number" => request()->nokPhoneNumber == "" ? null : request()->nokPhoneNumber,
                     "nok_name" => request()->nokName == "" ? null : request()->nokName,
@@ -422,8 +422,18 @@ class PatientsController extends Controller
         $patients = Cache::remember('facility_patients', 86400, function () {
             return Patient::with(['mainDoctor', 'familyMembers', 'preferredAppointmentTime'])
                 ->where('approved', 1)
+                ->where("facility_id", Auth::user()->facility_id)
                 ->orderBy("created_at", "desc")->get();
         });
+
+        $finalPatients = [];
+
+        foreach ($patients as $patient) {
+            $history = HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", $patient->id)->first();
+            $patient->healthHistory = $history ? $history->history : "";
+
+            $finalPatients[] = $patient;
+        }
 
         return $patients;
     }
@@ -539,7 +549,8 @@ class PatientsController extends Controller
                     ['year' => 'nullable|max:4|min:4', "month_range" => 'nullable|date_format:m-Y']
                 );
 
-                $query_patients = Patient::with('latestTreatment.invoices')->has('latestTreatment.invoices')->orWhereHas('latestTreatment.invoices', function ($query) {
+                $query_patients = Patient::with('latestTreatment.invoices')->has('latestTreatment.invoices')
+                    ->orWhereHas('latestTreatment.invoices', function ($query) {
                     $query->withoutAppends();
                 });
 
@@ -806,7 +817,7 @@ class PatientsController extends Controller
             $patientId = request()->patientId;
             $patientExists = Patient::find($patientId);
 
-            $all_appointments = Appointment::where('patient_id', $patientExists->id)
+            $all_appointments = Appointment::where('patient_id', $patientExists->id)->where("facility_id", Auth::user()->facility_id)
                 ->with(["patient", "status", "source", "type", "treatment", "period"])
                 ->orderBy("date", "asc")
                 ->get();
@@ -865,7 +876,8 @@ class PatientsController extends Controller
 
     public function patientImaging()
     {
-        $patients = Patient::orderBy("created_at", "desc")->get();
+        $patients = Patient::where("facility_id", Auth::user()->facility_id)
+            ->orderBy("created_at", "desc")->get();
         return $this->customSuccessResponseWithPayload($patients);
     }
 
@@ -1074,7 +1086,7 @@ class PatientsController extends Controller
     public function patient_number()
     {
         try {
-            $all_patients = Patient::count();
+            $all_patients = Patient::where('facility_id', Auth::user()->facility_id)->count();
             return $this->customSuccessResponseWithPayload($all_patients);
         } catch (\Throwable $th) {
             return $this->customFailResponseWithPayload($th->getMessage());
@@ -1086,6 +1098,7 @@ class PatientsController extends Controller
         try {
             $expected_patients_today = Appointment::where('date', Carbon::now()->format('d-m-Y'))
                 ->where('status_id', 1)
+                ->where('facility_id', Auth::user()->facility_id)
                 ->count();
 
             return $this->customSuccessResponseWithPayload($expected_patients_today);
@@ -1129,6 +1142,7 @@ class PatientsController extends Controller
         try {
             $approved_patients = Patient::with(['mainDoctor', 'familyMembers', 'preferredAppointmentTime'])
                 ->where('approved', 1)
+                ->where("facility_id", Auth::user()->facility_id)
                 ->orderBy("created_at", "desc")->select($this->landing_page_fields)->paginate(20);
             LogActivity::addToLog('View Approved Patient List', 'Read');
             return $this->customSuccessResponseWithPayload($approved_patients);
@@ -1146,6 +1160,7 @@ class PatientsController extends Controller
             }
 
             $search_patients = Patient::where('approved', 1)
+                ->where('facility_id', Auth::user()->facility_id)
                 ->where(function ($query) use ($key_word) {
                     $query->where('first_name', 'LIKE', '%' . $key_word . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $key_word . '%')
@@ -1169,6 +1184,7 @@ class PatientsController extends Controller
     {
         try {
             $pending_patients = Patient::where('approved', 0)
+                ->where("facility_id", Auth::user()->facility_id)
                 ->orderBy("created_at", "desc")->select($this->landing_page_fields)->paginate(20);
             LogActivity::addToLog('View Pending Patient List', 'Read');
             return $this->customSuccessResponseWithPayload($pending_patients);
@@ -1184,6 +1200,7 @@ class PatientsController extends Controller
             $status = request()->status ?? 0;
 
             $search_patients = Patient::where('approved', $status)
+                ->where('facility_id', Auth::user()->facility_id)
                 ->where(function ($query) use ($key_word) {
                     $query->where('first_name', 'LIKE', '%' . $key_word . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $key_word . '%')
@@ -1260,6 +1277,7 @@ class PatientsController extends Controller
             $key_word = request()->keyword;
 
             $search_patients = Patient::onlyTrashed()
+                ->where('facility_id', Auth::user()->facility_id)
                 ->where(function ($query) use ($key_word) {
                     $query->where('first_name', 'LIKE', '%' . $key_word . '%')
                         ->orWhere('last_name', 'LIKE', '%' . $key_word . '%')
@@ -1282,7 +1300,8 @@ class PatientsController extends Controller
     public function get_archived_patients()
     {
         try {
-            $archived_patients = Patient::orderBy("created_at", "desc")->select($this->landing_page_fields)->onlyTrashed()->paginate(20);
+            $archived_patients = Patient::where("facility_id", Auth::user()->facility_id)
+                ->orderBy("created_at", "desc")->select($this->landing_page_fields)->onlyTrashed()->paginate(20);
             LogActivity::addToLog('View Archived Patient List', 'Read');
             return $this->customSuccessResponseWithPayload($archived_patients);
         } catch (\Throwable $th) {

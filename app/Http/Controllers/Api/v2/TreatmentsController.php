@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Treatment;
 use Illuminate\Http\Request;
 use App\Models\TreatmentCategory;
@@ -9,11 +10,10 @@ use App\Models\TreatmentProcedure;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreTreatmentProcedureRequest;
 
-class TreatmentsController extends BaseController
+class TreatmentsController extends Controller
 {
       public function index(Request $request)
     {
@@ -80,7 +80,7 @@ class TreatmentsController extends BaseController
                 "subcategory" => request()->subcategory,
                 "code" => request()->code,
                 "price" => request()->price,
-                "facility_id" => Auth::user()->facility_id,
+                "facility_id" => 1,
                 "procedures"=> json_encode($request->procedures)
             ]);
 
@@ -177,7 +177,7 @@ class TreatmentsController extends BaseController
 
     public function doctorTreatments()
     {
-        return $this->customSuccessResponseWithPayload(Treatment::with(['doctors'])->where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get());
+        return $this->customSuccessResponseWithPayload(Treatment::with(['doctors'])->orderBy("created_at", "desc")->get());
 
     }
 

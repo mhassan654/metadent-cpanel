@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v2;
 
+use App\Http\Controllers\Controller;
 use App\Models\Supervisor;
 use App\Http\Controllers\ApiBaseController;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreSupervisorRequest;
 use App\Http\Requests\UpdateSupervisorRequest;
 
-class SupervisorController extends BaseController
+class SupervisorController extends Controller
 {
     /**
      * Display a listing of the resource.

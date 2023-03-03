@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
+use App\Http\Controllers\Controller;
 use App\Models\SubDepartment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class SubDepartmentController extends BaseController
+class SubDepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +20,7 @@ class SubDepartmentController extends BaseController
     {
         if (auth()->check()) {
             return $this->customSuccessResponseWithPayload(
-                SubDepartment::with('parent_department')->where('facility_id', Auth::user()->facility_id)->where('parent_id', '!=', 0)->orderBy("id", "desc")->get()
+                SubDepartment::with('parent_department')->where('parent_id', '!=', 0)->orderBy("id", "desc")->get()
             );
 
         }
