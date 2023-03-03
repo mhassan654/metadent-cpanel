@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v2\PatientsController;
 
 // Patients routes section
-Route::group(['prefix' => 'patients', 'middleware' => ['role:Doctor|Super-Admin', 'api']], function () {
+Route::group(['prefix' => 'patients', 'middleware' => ['api']], function () {
 
     // All the patients route
     Route::post('all', [PatientsController::class, 'index']);
