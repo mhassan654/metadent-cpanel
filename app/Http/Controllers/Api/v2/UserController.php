@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends BaseController
+class UserController extends ApiBaseController
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        // $this->middleware('auth:api');
     }
     /**
      * Display a listing of the resource.
@@ -26,7 +26,7 @@ class UserController extends BaseController
      */
     public function index(Request $request)
     {
-            $users = User::with('department')->where('facility_id', Auth::user()->facility_id)->orderBy('created_at', 'desc')->get();
+            $users = User::with('department')->orderBy('created_at', 'desc')->get();
             return $this->customSuccessResponseWithPayload($users);
     }
 
@@ -205,7 +205,7 @@ class UserController extends BaseController
     {
         $doctors = User::with(['department'=> function($query){
             $query->select(['id','department']);
-        }])->where('facility_id', Auth::user()->facility_id)->role('Doctor')->get()->makeHidden('role_id','permissions');
+        }])->role('Doctor')->get()->makeHidden('role_id','permissions');
 
         return $this->customSuccessResponseWithPayload($doctors);
     }
@@ -222,7 +222,7 @@ class UserController extends BaseController
                 return $this->customFailResponseMessage($validator->messages(), 200);
             }
 
-        $doctor = User::where('facility_id', Auth::user()->facility_id)->with('appointments')->role('Doctor')->find(\request()->doctorId);
+        $doctor = User::with('appointments')->role('Doctor')->find(\request()->doctorId);
 
         return $this->customSuccessResponseWithPayload($doctor);
     }
