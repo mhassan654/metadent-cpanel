@@ -32,7 +32,7 @@ class SlotsController extends Controller
     {
 //        $this->middleware("auth:api")->except(['appointment_type_slots_any_doctor', 'generate_doctors_free_slots']);
         $setting = Setting::where('key', '=', 'facility_default_interval')
-            ->where('facility_id', Auth::check() ? Auth::user()->facility_id : get_facility_setting('facility_id'))
+            ->where('facility_id', 1)
             ->latest()
             ->first();
         $this->default_interval = 10;
@@ -42,7 +42,7 @@ class SlotsController extends Controller
     {
         try {
             //code...
-        
+
         // dd(request());
         $days_names = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         // $request_appointment_date = request()->date ? request()->date : Carbon::parse()->format("d-m-Y");
@@ -224,10 +224,10 @@ class SlotsController extends Controller
             if($date){
                 if(!Carbon::hasFormat($date,$this->default_date_format)) throw new Exception("Invalid date format");
                 return Carbon::parse($date);
-            } 
+            }
             return Carbon::parse();
         } catch (\Throwable $th) {
-            throw $th;            
+            throw $th;
         }
     }
 
@@ -1194,7 +1194,7 @@ class SlotsController extends Controller
                                     if (count($common_doctors_working_time) !== 0) {
 
                                         // $all_doctors_appointments = $this->get_one_minutes_slots_of_doctors_appointments($mutable_valid_appointment_date, $doctors_ids);
-                                        $all_doctors_appointments = $this->get_one_minutes_slots_of_doctors_appointments_of_type($mutable_valid_appointment_date, $doctors_ids, $appointment_type->id, Auth::user()->facility_id);
+                                        $all_doctors_appointments = $this->get_one_minutes_slots_of_doctors_appointments_of_type($mutable_valid_appointment_date, $doctors_ids, $appointment_type->id, 1);
 
                                         $all_doctors_time_breaks = $this->get_all_doctors_one_minute_break_slots($request_appointment_day, $all_doctors, $mutable_valid_appointment_date_week);
 
@@ -1686,7 +1686,7 @@ class SlotsController extends Controller
 
     private function get_doctors_appointment_type_bookings($doctor_ids, $appointment_date, $appointment_day)
     {
-        $all_appointment_types = AppointmentType::where('facility_id', Auth::user()->facility_id)->get();
+        $all_appointment_types = AppointmentType::all();
         $all_appointment_types_one_minute_slots = array();
 
         foreach ($all_appointment_types as $type) :
@@ -1813,7 +1813,7 @@ class SlotsController extends Controller
         // dump($date);
         $all_doctors_appointments_slots = [];
 
-        $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)->where('date', '=', $date)->where('status_id', '<', 4)->get();
+        $all_appointments = Appointment::where('date', '=', $date)->where('status_id', '<', 4)->get();
 
         // dd($all_appointments);
         foreach ($all_doctor_ids as $doctor_id) :
@@ -1847,7 +1847,7 @@ class SlotsController extends Controller
     {
         $all_doctors_appointments_slots = [];
 
-        $all_appointments = Appointment::where('facility_id', $facility_id)->where('appointment_type_id', $appointment_type_id)->where('date', '=', $date)->where('status_id', '<', 4)->get();
+        $all_appointments = Appointment::where('appointment_type_id', $appointment_type_id)->where('date', '=', $date)->where('status_id', '<', 4)->get();
 
         // dd($all_appointments);
         foreach ($all_doctor_ids as $doctor_id) :
@@ -2176,17 +2176,16 @@ class SlotsController extends Controller
             //throw $th;
         }
 
-       
+
     }
 
     private function doctor_with_least_appointments($date)
     {
-        $all_appointments = Appointment::where('facility_id', Auth::user()->facility_id)
-            ->where('date', '=', $date)
+        $all_appointments = Appointment::where('date', '=', $date)
             ->where('status_id', '<', 4)
             ->get(['date', 'doctors']);
 
-        $doctors = Employee::where('facility_id', Auth::user()->facility_id)->where('id', '!=', 1)->get(['id']);
+        $doctors = Employee::where('id', '!=', 1)->get(['id']);
 
         $info = array();
 
@@ -2220,8 +2219,7 @@ class SlotsController extends Controller
 
     private function appointment_type_doctor_with_least_appointments($date, $doctor_ids, $facility_id)
     {
-        $all_appointments = Appointment::where('facility_id', $facility_id)
-            ->where('date', '=', $date)
+        $all_appointments = Appointment::where('date', '=', $date)
             ->where('status_id', '<', 4)
             ->get(['date', 'doctors']);
 
@@ -2537,7 +2535,7 @@ class SlotsController extends Controller
     public function generate_doctors_free_slots()
     {
         try {
-            $slots = (new SlotsService)->generate_doctors_free_slots(request()->appointmentTypeId, request()->facilityId, request()->date);
+            $slots = (new SlotsService)->generate_doctors_free_slots(request()->appointmentTypeId, 1, request()->date);
             return $this->customPatientSuccessResponse($slots);
         } catch (Throwable $ex) {
             return $this->customPatientErrorResponse($ex->getMessage());
