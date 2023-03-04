@@ -26,7 +26,7 @@ class AuthService
 
         JWTAuth::factory()->setTTL(get_facility_setting('min_login_session_time', 60));
 
-        $auth_token = Auth::attempt(['email' => $email, 'password' => $password]);
+        $auth_token = JWTAuth::attempt(['email' => $email, 'password' => $password]);
 
         if ($auth_token) {
 
