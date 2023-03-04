@@ -74,7 +74,7 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $all_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", 'frequency', 'department'])
-                ->orderBy("date", "asc")->whereJsonContains('doctors', [auth()->user()->id])
+                ->orderBy("date", "asc")->whereJsonContains('doctors', [auth('api')->user()->id])
                 ->get()
                 ->makeHidden(['doctors']);
             LogActivity::addToLog("Read Doctor Appointment List", "Read");
