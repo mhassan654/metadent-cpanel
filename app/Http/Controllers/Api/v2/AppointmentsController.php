@@ -33,6 +33,7 @@ class AppointmentsController extends ApiBaseController
     public function __construct(AppointmentService $appointmentService)
     {
         $this->appointmentService = $appointmentService;
+        $this->middleware(['auth:api']);
     }
 
     //TIED TO v1/patients/all ROUTE IN THE api.php FILE IN THE ROUTES FOLDER
@@ -74,7 +75,7 @@ class AppointmentsController extends ApiBaseController
     {
         try {
             $all_appointments = Appointment::with(["patient", "status", "source", "appointmentType", "treatmentType", 'frequency', 'department'])
-                ->orderBy("date", "asc")->whereJsonContains('doctors', [auth('api')->user()->id])
+                ->orderBy("date", "asc")->whereJsonContains('doctors', [auth()->user()->id])
                 ->get()
                 ->makeHidden(['doctors']);
             LogActivity::addToLog("Read Doctor Appointment List", "Read");
