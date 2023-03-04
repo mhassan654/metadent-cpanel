@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Api\v2;
 
 use App\Modules\Common\Helper;
 use App\Modules\Core\LogActivity;
-use Metadent\AuthModule\Models\EmployeeCode;
+use App\Models\EmployeeCode;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Controllers\ApiV2Controller;
 
-class TwoFAController extends BaseController
+class TwoFAController extends ApiV2Controller
 {
     /**
      * Write code on Method

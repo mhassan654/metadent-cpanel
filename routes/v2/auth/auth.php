@@ -10,6 +10,7 @@
  */
 
 use App\Http\Controllers\SmsController;
+use App\Http\Controllers\Api\v2\TwoFAController;
 use App\Http\Controllers\Api\v2\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,9 +20,9 @@ Route::group(['prefix' => 'auth', 'middleware' => ['api']], function () {
 
     Route::post("otp/send", [AuthenticationController::class, "send_phone_otp"]);
 
-    // Route::post('2fa', [TwoFAController::class, "store"]);
+    Route::post('2fa', [TwoFAController::class, "store"]);
 
-    Route::post('2fa', [AuthenticationController::class, "verify_2fa_and_login"]);
+    // Route::post('2fa', [AuthenticationController::class, "verify_2fa_and_login"]);
 
     // Route::post('verify/{code}', [\App\Http\Controllers\Api\v2\VerificationController::class, "verification_confirmation"]);
 
