@@ -39,7 +39,7 @@ class AppointmentTypesController extends ApiBaseController
             'doctors' => [],
             'week_days' => Arr::flatten(array_unique(request()->weekDays)),
             'for_web' => request()->forWeb,
-            'facility_id' => Auth::user()->facility_id,
+            'facility_id' => 1,
         ]);
 
         return $this->customSuccessResponseWithPayload($new_appointment);
@@ -129,8 +129,8 @@ class AppointmentTypesController extends ApiBaseController
 
     private function allTypes()
     {
-        $all_appointment_types = AppointmentType::where("facility_id", Auth::user()->facility_id)->orderBy("created_at", "desc")->get();
-        $all_appointments = Appointment::where("facility_id", Auth::user()->facility_id)->get();
+        $all_appointment_types = AppointmentType::orderBy("created_at", "desc")->get();
+        $all_appointments = Appointment::all();
 
         foreach ($all_appointment_types as $appointment_type):
 

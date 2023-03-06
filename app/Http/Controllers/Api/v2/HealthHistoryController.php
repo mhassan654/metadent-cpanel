@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Api\v2;
 
 use App\Http\Controllers\ApiBaseController;
-use App\Http\Controllers\ApiBaseController;
 use App\Models\HealthHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class HealthHistoryController extends BaseController
+class HealthHistoryController extends ApiBaseController
 {
     public function __construct()
     {
@@ -23,7 +22,7 @@ class HealthHistoryController extends BaseController
     {
         if ($this->authUser()->hasRole('Charting'))
         {
-            return $this->customSuccessResponseWithPayload(HealthHistory::where("facility_id", Auth::user()->facility_id));
+            return $this->customSuccessResponseWithPayload(HealthHistory::where("facility_id", 1));
         }
         return $this->customFailResponseWithPayload('Permission denied');
 
@@ -75,7 +74,7 @@ class HealthHistoryController extends BaseController
             if ($history) {
                 $history->update(["history" => request()->healthHistory]);
 
-                $this->customSuccessResponseWithPayload(HealthHistory::where("facility_id", Auth::user()->facility_id)->where("patient_id", request()->patientId)->first());
+                $this->customSuccessResponseWithPayload(HealthHistory::where("patient_id", request()->patientId)->first());
             }
 
             return $this->customFailResponseWithPayload("Patient does not have health history");

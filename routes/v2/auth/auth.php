@@ -10,6 +10,7 @@
  */
 
 use App\Http\Controllers\SmsController;
+use App\Http\Controllers\Api\v2\TwoFAController;
 use App\Http\Controllers\Api\v2\AuthenticationController;
 use Illuminate\Support\Facades\Route;
 

@@ -12,6 +12,7 @@ use App\Models\EmployeeCode;
 use Illuminate\Http\Request;
 use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\ApiV2Controller;
 use App\Services\Auth\Google2faService;
@@ -270,4 +271,5 @@ class AuthenticationController extends ApiV2Controller
             return $this->sendError('Not logged in');
         }
     }
+   
 }
